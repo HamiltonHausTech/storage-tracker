@@ -32,5 +32,5 @@ Simple CLI-based storage management tool — find your stuff without digging thr
 4. Run:
 ```bash
 python bin_tracker.py
-
+```
 Profit!
