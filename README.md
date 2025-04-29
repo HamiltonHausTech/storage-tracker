@@ -34,3 +34,7 @@ Simple CLI-based storage management tool — find your stuff without digging thr
 python bin_tracker.py
 ```
 Profit!
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

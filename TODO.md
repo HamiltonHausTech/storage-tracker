@@ -2,10 +2,10 @@
 
 ## Before Public Release
 - [ ] Fuzzy search / partial matches
-- [✅] Backup `bins.json` before every save (already done ✅)
+- ✅ Backup `bins.json` before every save (already done ✅)
 - [ ] Sort bins/items alphabetically when listing
-- [✅] Friendly prompts and confirmations for deletes/overwrites
-- [✅] Clean up CLI messaging (errors/success formatting)
+- ✅ Friendly prompts and confirmations for deletes/overwrites
+- ✅ Clean up CLI messaging (errors/success formatting)
 
 ## Future Ideas
 - [ ] Optional GUI version (Tkinter or Flask)
