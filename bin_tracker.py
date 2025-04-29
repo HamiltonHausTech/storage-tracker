@@ -2,6 +2,8 @@ import json
 import os
 import shutil
 
+from colorama import init, Fore, Style
+init()
 DATA_FILE = 'bins.json'
 
 # Load data
@@ -23,17 +25,17 @@ def add_bin():
     data = load_bins()
     bin_name = input("Enter new bin name: ").strip()
     if not bin_name:
-        print("Bin name cannot be empty.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + "Bin name cannot be empty.")
         return
 
     location = input("Enter bin location: ")
     if not location:
-        print("Location name cannot be empty")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + "Location name cannot be empty")
         return
     
     data["bins"].append({"bin_name": bin_name, "location": location, "items": []})
     save_bins(data)
-    print(f"Bin '{bin_name}' added successfully!")
+    print(Fore.GREEN + "[SUCCESS] " + Style.RESET_ALL + f"Bin '{bin_name}' added successfully!")
 
 # Add item to existing bin
 def add_item_to_bin():
@@ -44,16 +46,16 @@ def add_item_to_bin():
         if bin["bin_name"].lower() == bin_name.lower():
             bin["items"].append(item)
             save_bins(data)
-            print(f"Item '{item}' added to bin '{bin_name}'.")
+            print(Fore.GREEN + "[SUCCESS] " + Style.RESET_ALL + f"Item '{item}' added to bin '{bin_name}'.")
             return
     choice = input(f"Bin '{bin_name}' not found. Create it? (y/n): ").lower()
     if choice == 'y':
         data["bins"].append({"bin_name": bin_name, "location": "Unknown", "items": [item]})
         save_bins(data)
-        print(f"Created bin '{bin_name}' and added item '{item}'.")
+        print(Fore.GREEN + "[SUCCESS] " + Style.RESET_ALL + f"Created bin '{bin_name}' and added item '{item}'.")
     else:
-        print("Item not added.")
-        print(f"Bin '{bin_name}' not found.")
+        print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + "Item not added.")
+        print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + f"Bin '{bin_name}' not found.")
 
 # Search for item
 def search_items():
@@ -63,15 +65,16 @@ def search_items():
     for bin in data["bins"]:
         for item in bin["items"]:
             if search_term in item.lower():
-                print(f"Found '{item}' in {bin['bin_name']} (Location: {bin['location']})")
+                print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + f"Found '{item}' in {bin['bin_name']} (Location: {bin['location']})")
                 found = True
     if not found:
-        print("Item not found.")
+        print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + "Item not found.")
 
 # List all bins
 def list_bins():
     data = load_bins()
     for bin in data["bins"]:
+        print("--------------------------------------")
         print(f"{bin['bin_name']} - Location: {bin['location']}")
         if bin['items']:
             for item in bin['items']:
@@ -94,10 +97,10 @@ def move_item_to_bin():
             target_bin = bin
 
     if not source_bin:
-        print(f"[ERROR] Source bin '{source_bin_name}' not found.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + f"Source bin '{source_bin_name}' not found.")
         return
     if not target_bin:
-        print(f"[ERROR] Target bin '{target_bin_name}' not found.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + f"Target bin '{target_bin_name}' not found.")
         return
 
     # Try to find the item in the source bin
@@ -108,14 +111,18 @@ def move_item_to_bin():
             break
 
     if not item_found:
-        print(f"[ERROR] Item '{item_name}' not found in bin '{source_bin_name}'.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + f"Item '{item_name}' not found in bin '{source_bin_name}'.")
         return
 
     # Move item
-    source_bin["items"].remove(item_found)
-    target_bin["items"].append(item_found)
-    save_bins(data)
-    print(f"[SUCCESS] Moved '{item_found}' from '{source_bin_name}' to '{target_bin_name}'.")
+    confirm = input(f"Move '{item_found}' from '{source_bin_name}' to '{target_bin_name}'? (y/n): ").lower()
+    if confirm == 'y':
+        source_bin["items"].remove(item_found)
+        target_bin["items"].append(item_found)
+        save_bins(data)
+        print(Fore.GREEN + "[SUCCESS] " + Style.RESET_ALL + f"Moved '{item_found}' from '{source_bin_name}' to '{target_bin_name}'.")
+    else:
+        print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + "[INFO] Move canceled.")
 
 def remove_item_from_bin():
     data = load_bins()
@@ -126,7 +133,7 @@ def remove_item_from_bin():
             source_bin = bin
 
     if not source_bin:
-        print(f"[ERROR] Source bin '{bin_name}' not found.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + f"Source bin '{bin_name}' not found.")
         return
 
     item_found = None
@@ -136,15 +143,16 @@ def remove_item_from_bin():
             break
 
     if not item_found:
-        print(f"[ERROR] Item '{item_name}' not found in bin '{bin_name}'.")
+        print(Fore.RED + "[ERROR] " + Style.RESET_ALL + f"Item '{item_name}' not found in bin '{bin_name}'.")
         return
 
-    source_bin["items"].remove(item_found)
-    save_bins(data)
-    print(f"[SUCCESS] Removed '{item_found}' from '{bin_name}'.")
-
-
-
+    confirm = input(f"Are you sure you want to remove '{item}' from bin '{bin_name}'? (y/n): ").lower()
+    if confirm == 'y' or confirm == 'yes':
+        source_bin["items"].remove(item)
+        save_bins(data)
+        print(Fore.GREEN + "[SUCCESS] " + Style.RESET_ALL + f"Item '{item}' removed from bin '{bin_name}'.")
+    else:
+        print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + "[INFO] Removal canceled.")
 
 # Main menu
 def main():
@@ -176,7 +184,7 @@ def main():
             print("Goodbye!")
             break
         else:
-            print("Invalid choice, try again.")
+            print(Fore.RED + "Invalid choice, try again." + Style.RESET_ALL)
 
 if __name__ == "__main__":
     main()
