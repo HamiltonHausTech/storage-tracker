@@ -21,7 +21,6 @@ def save_bins(data):
 # Add a new bin
 def add_bin():
     data = load_bins()
-    bin_name = input("Enter new bin name: ")
     bin_name = input("Enter new bin name: ").strip()
     if not bin_name:
         print("Bin name cannot be empty.")
@@ -78,15 +77,86 @@ def list_bins():
             for item in bin['items']:
                 print(f"  - {item}")
 
+def move_item_to_bin():
+    data = load_bins()
+
+    item_name = input("Enter the item you want to move: ").strip()
+    source_bin_name = input("Enter the current bin name: ").strip()
+    target_bin_name = input("Enter the target bin name: ").strip()
+
+    source_bin = None
+    target_bin = None
+
+    for bin in data["bins"]:
+        if bin["bin_name"].lower() == source_bin_name.lower():
+            source_bin = bin
+        if bin["bin_name"].lower() == target_bin_name.lower():
+            target_bin = bin
+
+    if not source_bin:
+        print(f"[ERROR] Source bin '{source_bin_name}' not found.")
+        return
+    if not target_bin:
+        print(f"[ERROR] Target bin '{target_bin_name}' not found.")
+        return
+
+    # Try to find the item in the source bin
+    item_found = None
+    for item in source_bin["items"]:
+        if item_name.lower() == item.lower():
+            item_found = item
+            break
+
+    if not item_found:
+        print(f"[ERROR] Item '{item_name}' not found in bin '{source_bin_name}'.")
+        return
+
+    # Move item
+    source_bin["items"].remove(item_found)
+    target_bin["items"].append(item_found)
+    save_bins(data)
+    print(f"[SUCCESS] Moved '{item_found}' from '{source_bin_name}' to '{target_bin_name}'.")
+
+def remove_item_from_bin():
+    data = load_bins()
+    item_name = input("Enter the item you want to remove: ").strip()
+    bin_name = input("Enter the bin name: ").strip()
+    for bin in data["bins"]:
+        if bin["bin_name"].lower() == bin_name.lower():
+            source_bin = bin
+
+    if not source_bin:
+        print(f"[ERROR] Source bin '{bin_name}' not found.")
+        return
+
+    item_found = None
+    for item in source_bin["items"]:
+        if item_name.lower() == item.lower():
+            item_found = item
+            break
+
+    if not item_found:
+        print(f"[ERROR] Item '{item_name}' not found in bin '{bin_name}'.")
+        return
+
+    source_bin["items"].remove(item_found)
+    save_bins(data)
+    print(f"[SUCCESS] Removed '{item_found}' from '{bin_name}'.")
+
+
+
+
 # Main menu
 def main():
     while True:
         print("\nStorage Bin Tracker")
         print("1. Add New Bin")
         print("2. Add Item to Bin")
-        print("3. Search for Item")
-        print("4. List All Bins")
-        print("5. Exit")
+        print("3. Remove Item from Bin")
+        print("4. Search for Item")
+        print("5. Move Item to another bin")
+        print("6. List All Bins")
+        print("7. Exit")
 
         choice = input("Enter choice: ")
 
@@ -95,10 +165,14 @@ def main():
         elif choice == '2':
             add_item_to_bin()
         elif choice == '3':
-            search_items()
+            remove_item_from_bin()
         elif choice == '4':
-            list_bins()
+            search_items()
         elif choice == '5':
+            move_item_to_bin()
+        elif choice == '6':
+            list_bins()
+        elif choice == '7':
             print("Goodbye!")
             break
         else:

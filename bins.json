@@ -1,15 +1,28 @@
 {
-    "bins": [
-      {
-        "bin_name": "Bin 1",
-        "location": "Garage Shelf A",
-        "items": ["Christmas lights", "Extension cords"]
-      },
-      {
-        "bin_name": "Bin 2",
-        "location": "Basement Closet",
-        "items": ["Winter coats", "Boots"]
-      }
-    ]
+  "bins": [
+    {
+      "bin_name": "Bin 1",
+      "location": "Garage Shelf A",
+      "items": [
+        "Christmas lights",
+        "Extension cords"
+      ]
+    },
+    {
+      "bin_name": "Bin 2",
+      "location": "Basement Closet",
+      "items": [
+        "Winter coats",
+        "Boots"
+      ]
+    },
+    {
+      "bin_name": "Bin 3",
+      "location": "Garage Shelf B",
+      "items": [
+        "Lifejackets",
+        "bumpers"
+      ]
+    }
+  ]
 }
-  
